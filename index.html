@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Idade</title>
+
+<style>
+/* ======= ESTILOS (inalterados) ======= */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 100vh;
+}
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+}
+h1 { text-align: center; }
+.subtitle { text-align: center; color: #666; margin-bottom: 20px; }
+.server-info {
+    background: #d1ecf1;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+}
+input, select, button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+}
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+.result, .error {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 10px;
+}
+.result { background: #f8f9fa; border-left: 5px solid #28a745; }
+.error { background: #f8d7da; border-left: 5px solid #dc3545; }
+.age-number { font-size: 42px; font-weight: bold; }
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    gap: 15px;
+}
+.detail-card {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+.examples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+    gap: 10px;
+    margin: 15px 0;
+}
+.example-card {
+    background: #e9ecef;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🎂 Calculadora de Idade</h1>
+<div class="subtitle">Descubra sua idade exata</div>
+
+<div class="server-info" id="serverInfo"></div>
+
+<form id="ageForm">
+<div class="form-grid">
+<input type="number" id="dia" placeholder="Dia" min="1" max="31" required>
+<select id="mes" required>
+<option value="">Mês</option>
+<option value="1">Janeiro</option>
+<option value="2">Fevereiro</option>
+<option value="3">Março</option>
+<option value="4">Abril</option>
+<option value="5">Maio</option>
+<option value="6">Junho</option>
+<option value="7">Julho</option>
+<option value="8">Agosto</option>
+<option value="9">Setembro</option>
+<option value="10">Outubro</option>
+<option value="11">Novembro</option>
+<option value="12">Dezembro</option>
+</select>
+<input type="number" id="ano" placeholder="Ano" min="1900" required>
+</div>
+
+<div class="examples">
+<div class="example-card" onclick="preencher(15,8,1990)">15/08/1990</div>
+<div class="example-card" onclick="preencher(1,1,2000)">01/01/2000</div>
+<div class="example-card" onclick="preencher(25,12,1985)">25/12/1985</div>
+</div>
+
+<button type="submit">🧮 Calcular</button>
+</form>
+
+<div id="output"></div>
+
+</div>
+
+<script>
+/* ===== DATA ATUAL ===== */
+const now = new Date();
+document.getElementById("serverInfo").innerHTML =
+`📅 Hoje: <strong>${now.toLocaleDateString('pt-BR')}</strong> |
+⏰ Hora: <strong>${now.toLocaleTimeString('pt-BR')}</strong>`;
+
+/* ===== FUNÇÕES ===== */
+function preencher(d,m,a){
+    dia.value=d; mes.value=m; ano.value=a;
+}
+
+function signo(d,m){
+const s=[
+["Áries",21,3,19,4],["Touro",20,4,20,5],["Gêmeos",21,5,20,6],
+["Câncer",21,6,22,7],["Leão",23,7,22,8],["Virgem",23,8,22,9],
+["Libra",23,9,22,10],["Escorpião",23,10,21,11],
+["Sagitário",22,11,21,12],["Capricórnio",22,12,19,1],
+["Aquário",20,1,18,2],["Peixes",19,2,20,3]
+];
+for(let x of s){
+if((m==x[2]&&d>=x[1])||(m==x[4]&&d<=x[3])) return x[0];
+}
+return "—";
+}
+
+/* ===== CALCULAR ===== */
+ageForm.addEventListener("submit", e=>{
+e.preventDefault();
+
+const d=+dia.value,m=+mes.value,a=+ano.value;
+const nasc=new Date(a,m-1,d);
+if(isNaN(nasc)||nasc>now){
+output.innerHTML="<div class='error'>Data inválida</div>";
+return;
+}
+
+let anos=now.getFullYear()-a;
+if(new Date(now.getFullYear(),m-1,d)>now) anos--;
+
+const dias=Math.floor((now-nasc)/86400000);
+
+output.innerHTML=`
+<div class="result">
+<div class="age-number">${anos} anos</div>
+<div class="details-grid">
+<div class="detail-card">📅 ${nasc.toLocaleDateString('pt-BR')}</div>
+<div class="detail-card">⭐ ${signo(d,m)}</div>
+<div class="detail-card">📈 ${dias.toLocaleString()} dias</div>
+</div>
+</div>`;
+});
+</script>
+
+</body>
+</html>
