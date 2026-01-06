@@ -1,175 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Idade</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Idade</title>
 
-<!-- Tailwind CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = { darkMode: 'class' }
-</script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 
              dark:from-gray-900 dark:to-gray-800 p-6 transition-colors">
 
-<div class="max-w-3xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 transition">
+<div class="max-w-3xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8">
 
-<!-- HEADER -->
-<div class="flex justify-between items-center mb-6">
-  <div>
-    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">🎂 Calculadora de Idade</h1>
-    <p class="text-gray-500 dark:text-gray-400">Descubra sua idade exata</p>
-  </div>
+  <!-- HEADER -->
+  <header class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+        🎂 Calculadora de Idade
+      </h1>
+      <p class="text-gray-500 dark:text-gray-400">
+        Descubra sua idade exata
+      </p>
+    </div>
 
-  <!-- DARK MODE -->
-  <button onclick="toggleDark()"
-    class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 
-           text-gray-800 dark:text-white hover:scale-105 transition">
-    🌙 / ☀️
-  </button>
+    <button id="toggleDark"
+      class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 
+             text-gray-800 dark:text-white hover:scale-105 transition">
+      🌙 / ☀️
+    </button>
+  </header>
+
+  <!-- SERVER INFO -->
+  <div id="serverInfo" class="info-box"></div>
+
+  <!-- FORM -->
+  <form id="ageForm" class="space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <input id="dia" type="number" min="1" max="31" placeholder="Dia" required class="input">
+      <select id="mes" required class="input">
+        <option value="">Mês</option>
+        <option value="1">Janeiro</option>
+        <option value="2">Fevereiro</option>
+        <option value="3">Março</option>
+        <option value="4">Abril</option>
+        <option value="5">Maio</option>
+        <option value="6">Junho</option>
+        <option value="7">Julho</option>
+        <option value="8">Agosto</option>
+        <option value="9">Setembro</option>
+        <option value="10">Outubro</option>
+        <option value="11">Novembro</option>
+        <option value="12">Dezembro</option>
+      </select>
+      <input id="ano" type="number" min="1900" placeholder="Ano" required class="input">
+    </div>
+
+    <!-- EXAMPLES -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <button type="button" data-date="15-8-1990" class="example">15/08/1990</button>
+      <button type="button" data-date="1-1-2000" class="example">01/01/2000</button>
+      <button type="button" data-date="25-12-1985" class="example">25/12/1985</button>
+    </div>
+
+    <button type="submit"
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3
+             rounded-lg transition hover:scale-[1.02]">
+      🧮 Calcular Idade
+    </button>
+  </form>
+
+  <!-- OUTPUT -->
+  <div id="output"></div>
 </div>
 
-<!-- SERVER INFO -->
-<div id="serverInfo"
- class="mb-6 bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200
-        p-4 rounded-lg text-center font-semibold">
-</div>
-
-<!-- FORM -->
-<form id="ageForm" class="space-y-4">
-
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-  <input id="dia" type="number" min="1" max="31" placeholder="Dia" required
-    class="input">
-
-  <select id="mes" required class="input">
-    <option value="">Mês</option>
-    <option value="1">Janeiro</option>
-    <option value="2">Fevereiro</option>
-    <option value="3">Março</option>
-    <option value="4">Abril</option>
-    <option value="5">Maio</option>
-    <option value="6">Junho</option>
-    <option value="7">Julho</option>
-    <option value="8">Agosto</option>
-    <option value="9">Setembro</option>
-    <option value="10">Outubro</option>
-    <option value="11">Novembro</option>
-    <option value="12">Dezembro</option>
-  </select>
-
-  <input id="ano" type="number" min="1900" placeholder="Ano" required
-    class="input">
-</div>
-
-<!-- EXAMPLES -->
-<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-  <button type="button" onclick="preencher(15,8,1990)" class="example">15/08/1990</button>
-  <button type="button" onclick="preencher(1,1,2000)" class="example">01/01/2000</button>
-  <button type="button" onclick="preencher(25,12,1985)" class="example">25/12/1985</button>
-</div>
-
-<button type="submit"
- class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3
-        rounded-lg transition hover:scale-[1.02]">
-🧮 Calcular Idade
-</button>
-
-</form>
-
-<!-- OUTPUT -->
-<div id="output"></div>
-
-</div>
-
-<script>
-/* ===== DARK MODE ===== */
-function toggleDark(){
-  document.documentElement.classList.toggle('dark');
-}
-
-/* ===== DATA ATUAL ===== */
-const now = new Date();
-serverInfo.innerHTML = `📅 Hoje: <strong>${now.toLocaleDateString('pt-BR')}</strong> |
-⏰ Hora: <strong>${now.toLocaleTimeString('pt-BR')}</strong>`;
-
-/* ===== FUNÇÕES ===== */
-function preencher(d,m,a){
-  dia.value=d; mes.value=m; ano.value=a;
-}
-
-function signo(d,m){
-const s=[
-["Áries",21,3,19,4],["Touro",20,4,20,5],["Gêmeos",21,5,20,6],
-["Câncer",21,6,22,7],["Leão",23,7,22,8],["Virgem",23,8,22,9],
-["Libra",23,9,22,10],["Escorpião",23,10,21,11],
-["Sagitário",22,11,21,12],["Capricórnio",22,12,19,1],
-["Aquário",20,1,18,2],["Peixes",19,2,20,3]
-];
-for(let x of s){
-if((m==x[2]&&d>=x[1])||(m==x[4]&&d<=x[3])) return x[0];
-}
-return "—";
-}
-
-/* ===== CALCULAR ===== */
-ageForm.addEventListener("submit", e=>{
-e.preventDefault();
-
-const d=+dia.value,m=+mes.value,a=+ano.value;
-const nasc=new Date(a,m-1,d);
-
-if(isNaN(nasc)||nasc>now){
-output.innerHTML=`
-<div class="mt-6 bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-200
-border-l-4 border-red-500 p-4 rounded-lg animate-fade">
-❌ Data inválida
-</div>`;
-return;
-}
-
-let anos=now.getFullYear()-a;
-if(new Date(now.getFullYear(),m-1,d)>now) anos--;
-
-const dias=Math.floor((now-nasc)/86400000);
-
-output.innerHTML=`
-<div class="mt-6 bg-green-50 dark:bg-green-900 border-l-4 border-green-500
-p-6 rounded-lg text-center animate-fade">
-<div class="text-4xl font-bold text-green-700 dark:text-green-300 mb-4">
-${anos} anos
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-  <div class="card">📅 ${nasc.toLocaleDateString('pt-BR')}</div>
-  <div class="card">⭐ ${signo(d,m)}</div>
-  <div class="card">📈 ${dias.toLocaleString()} dias</div>
-</div>
-</div>`;
-});
-</script>
-
-<style>
-.input{
-@apply w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-lg
-bg-white dark:bg-gray-800 text-gray-800 dark:text-white
-focus:ring-2 focus:ring-blue-500 outline-none transition;
-}
-.example{
-@apply bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
-py-2 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition;
-}
-.card{
-@apply bg-white dark:bg-gray-800 p-4 rounded-lg font-semibold;
-}
-@keyframes fade{
-from{opacity:0;transform:translateY(10px)}
-to{opacity:1;transform:translateY(0)}
-}
-.animate-fade{animation:fade .4s ease}
-</style>
-
+<script src="assets/js/main.js"></script>
 </body>
 </html>
